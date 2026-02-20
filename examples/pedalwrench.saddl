@@ -1,0 +1,32 @@
+
+DEFINE CN1 as Unscrew pedals from bicycle
+DEFINE CN2 as Comfortable to use with one hand
+DEFINE FR1 as Fit 15 mm nut
+DEFINE FR2 as Transmit sufficient torque
+DEFINE FR3 as Fit between pedal and frame
+COUPLE CN1 to FR1 because Common size for pedals
+COUPLE CN1 to FR2 because Pedals must be screwed tight
+COUPLE CN1 to FR3 because This is a narrow space
+DEFINE FR4 as Handle fits human hand
+DEFINE FR5 as Distribute loads with padding
+COUPLE CN2 to FR4 because Handles must be designed to fit
+COUPLE CN2 to FR5 because Padding is a common approach
+DEFINE DP1 as Steel plate body
+DEFINE DP2 as Plastic dipped handles
+COUPLE FR1 to DP1 because Can be cut easily
+COUPLE FR2 to DP1 because Steel is strong
+COUPLE FR3 to DP1 because Plate can be made thin
+COUPLE FR4 to DP1 because Easy to cut from plate
+COUPLE FR5 to DP2 because Common padding method
+DEFINE FR2.1 as Transmit >= 40 Nm
+DEFINE DP1.1 as 5 mm thickness
+COUPLE FR2.1 to DP1.1 because Sufficient bending strength
+DEFINE FR3.1 as Fit within 50 mm gap
+COUPLE FR3.1 to DP1.1 because Sufficient clearance
+DEFINE PV1 as Cut from plate stock
+DEFINE PV1.1 as Make on CNC mill
+DEFINE PV2 as Purchase plastic dipping compound
+COUPLE DP1.1 to PV1.1 because Milling possible
+COUPLE DP2 to PV2 because COTS solution
+ACCEPT PV1.1 because Ready for production
+ACCEPT PV2 because Easily available

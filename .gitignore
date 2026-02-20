@@ -1,0 +1,7 @@
+# Ignore compiled Python files
+src/__pycache__/*
+*.pyc
+
+# Editor Files
+*.bak
+/venv/

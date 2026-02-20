@@ -1,0 +1,58 @@
+DEFINE CN1 as Cruise around on frozen lakes
+DEFINE CN2 as Use inexpensive, available parts
+DEFINE FR1 as Propel self on low-friction surface
+DEFINE FR2 as Distribute weight over wide area
+DEFINE FR3 as Use simple mechanical design
+DEFINE CN3 as Radio-controllable within 250 m range
+DEFINE FR4 as Maintain contact with remote control
+DEFINE FR5 as Simple electrical system
+DEFINE DP1 as Hovercraft skirt and lift system
+COUPLE FR1 to DP1 because Hovercraft are well-suited to ice
+COUPLE FR2 to DP1 because Point forces converted to low pressures
+DEFINE DP2 as Drone motor and servo for vectored thrust
+COUPLE FR1 to DP2 because No traction required
+COUPLE FR3 to DP2 because Fewest possible moving parts
+DEFINE DP3 as Standard R/C transmitter and receiver kit
+COUPLE FR4 to DP3 because Verifiable performance
+DEFINE DP4 as Control motors with drone ESCs
+DEFINE DP5 as High-current and robust onboard power supply
+COUPLE FR5 to DP5 because Simple and robust high-current source
+COUPLE FR5 to DP4 because Proven solution
+DEFINE PV1 as Modify backpack rain cover
+COUPLE DP1 to PV1 because Waterproof and reasonably airtight
+COUPLE CN1 to FR1 because Important feature
+COUPLE CN1 to FR2 because Safest option
+COUPLE CN2 to FR3 because Cheapest option
+COUPLE CN2 to FR5 because Cheap and reliable
+COUPLE CN3 to FR4 because Contact required for control
+DEFINE FR1.1 as Ground clearance of 20 mm
+DEFINE DP1.1 as Skirt depth of at least 20 mm
+COUPLE FR1.1 to DP1.1 because Inflation height dictates ground clearance
+DEFINE FR2.1 as Support loads of >= 5 kg
+DEFINE DP1.2 as Large contact area and high-pressure lift fans
+COUPLE FR2.1 to DP1.2 because Loads carried by skirt pressure
+DEFINE FR3.1 as Limited moving parts
+DEFINE FR3.2 as Design for rapid fabrication
+DEFINE DP6 as Hull from easily-available materials
+DEFINE DP6.1 as Structural backbone from acrylic sheets
+DEFINE DP6.2 as Complex features 3D-printed
+COUPLE FR3 to DP6 because Hull constitutes bulk of design
+COUPLE FR3.2 to DP6.1 because Minimal fabrication time
+COUPLE FR3.2 to DP6.2 because Minimal fabrication time
+DEFINE DP2.1 as Drone motor provides thrust
+DEFINE DP2.2 as High-torque servo vectors thrust for steering
+COUPLE FR3.1 to DP2.1 because Reliable COTS solution
+COUPLE FR3.1 to DP2.2 because 1 part/DOF
+DEFINE PV1.1 as Ensure sufficient depth remaining
+DEFINE PV1.2 as Cut large plate to mount skirt to hull
+ACCEPT PV1.1 because Achievable
+COUPLE DP1.1 to PV1.1 because Depth ensured
+DEFINE PV2 as Select available quadcopter drone components
+DEFINE PV2.1 as Select motors capable of high static pressure
+DEFINE PV2.2 as Find ESCs to match motors
+DEFINE PV3 as Mount a power drill battery
+COUPLE DP5 to PV3 because Suitable for this environment
+ACCEPT PV3 because Part available
+COUPLE DP4 to PV2 because Easy to use and available
+ACCEPT PV2.1 because Parts found
+ACCEPT PV2.2 because Parts found

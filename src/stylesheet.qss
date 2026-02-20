@@ -1,0 +1,107 @@
+/* ------------------------------------------------------- */
+/* Variables can be defined to make things easier          */
+
+/* DEFINE --text_color AS #111111 */
+/* DEFINE --text_faint AS #111111 */
+/* DEFINE --background_color AS #717d8e */
+/* DEFINE --pane_color AS #a1a8b3 */
+/* DEFINE --highlight_color AS #b4b9c2 */
+
+/* These definitions will be subbed in by the preprocessor */
+/* ------------------------------------------------------- */
+
+
+/* Override system colors */
+QWidget {
+    color: --text_color;
+}
+
+/* Turn the backgrounds and borders off for these containers */
+ContainerWidget {
+    background-color: rgba(0, 0, 0, 0);
+    border: transparent;
+}
+
+/* If this is left to `transparent`, things get glitchy */
+QDialog {
+    background-color: --background_color;
+}
+
+QMainWindow {
+    background: --pane_color;
+}
+
+QToolBar {
+    background: --pane_color;
+}
+
+QToolBar::separator {
+    border: transparent;
+    border-radius: 2px;
+    background: --highlight_color;
+}
+
+QToolButton:hover, QToolButton:checked {
+    background: --highlight_color;
+}
+
+QGraphicsView {
+    background: --background_color;
+    border: 1px solid #425168;
+}
+
+QPushButton {
+    background: --pane_color;
+    border: transparent;        /* No borders, it interferes with spacing */
+    border-radius: 2px;
+}
+
+QPushButton:pressed {
+    background: --highlight_color;
+}
+
+QPushButton:checked {
+    background: green;
+}
+
+QLabel {
+    color: --text_color;
+}
+
+QLineEdit {
+    background: --pane_color;
+    color: --text_color;
+    border: transparent;
+}
+
+QLineEdit:read-only {
+    background: --pane_color;
+    color: --text_color;
+}
+
+QSpinBox {
+    background: --pane_color;
+}
+
+QDoubleSpinBox {
+    background: --pane_color;
+}
+
+QComboBox {
+    background: --pane_color;
+}
+
+QTabBar {
+    background: --pane_color;
+}
+QTabBar QToolButton {
+    background: --pane_color;
+}
+
+/* Style the scroll areas accordingly */
+QScrollArea {
+    background: --background_color;
+}
+QScrollArea > QWidget > QWidget {
+    background: --background_color;
+}
