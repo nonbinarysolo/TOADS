@@ -50,7 +50,7 @@ def prepare_stylesheet(path_to_stylesheet):
 
 
 # Load up a bunch of icons
-def load_icons(directory="../resources/icons", resolution="128x128"):
+def load_icons(directory="./resources/icons", resolution="128x128"):
     TOADSIcons = {}
     icon_files = filter(lambda x: x.endswith(resolution + ".png"), os.listdir(directory))
     for filename in icon_files:

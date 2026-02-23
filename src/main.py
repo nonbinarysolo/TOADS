@@ -6,12 +6,12 @@ from PyQt6.QtGui import QAction, QKeySequence
 from PyQt6.QtWidgets import QMainWindow, QApplication, QWidget, QHBoxLayout, QFileDialog, QLabel, QGraphicsView
 
 import saddl
-from src.ui_core import prepare_stylesheet, load_icons
+from ui_core import prepare_stylesheet, load_icons
 from ui_matrix import MatrixScene, NavigableGraphicsView
 from ui_history import TimelineScene
 
 # Import plugins here
-from src.plugins_core import TOADSPlugin
+from plugins_core import TOADSPlugin
 
 
 class InteractionManager:
@@ -296,7 +296,7 @@ class Window(QMainWindow):
     # Prompt the user for a new file path and start saving work there
     def prompt_for_new_file(self):
         self.manager.close_and_reset()
-        path = QFileDialog.getSaveFileName(self, "Create new design", "../examples", "SADDL Files (*.saddl)")[0]
+        path = QFileDialog.getSaveFileName(self, "Create new design", "./examples", "SADDL Files (*.saddl)")[0]
 
         if path:
             self.manager.start_new_file(path)
@@ -306,7 +306,7 @@ class Window(QMainWindow):
 
     # Prompt the user for a path to an existing file and start working on that
     def prompt_for_existing_file(self):
-        path = QFileDialog.getOpenFileName(self, "Open design", "../examples", "SADDL Files (*.saddl)")[0]
+        path = QFileDialog.getOpenFileName(self, "Open design", "./examples", "SADDL Files (*.saddl)")[0]
 
         if path:
             self.manager.load_from_file(path)
@@ -318,7 +318,7 @@ class Window(QMainWindow):
     # Force-save a file or save existing work as a file
     def save_file(self):
         if not self.manager.file:
-            path = QFileDialog.getSaveFileName(self, "Save design as...", "../examples", "SADDL Files (*.saddl)")[0]
+            path = QFileDialog.getSaveFileName(self, "Save design as...", "./examples", "SADDL Files (*.saddl)")[0]
             if path:
                 self.manager.save_as_file(path)
                 self._display_filename_in_title(path)
@@ -350,7 +350,7 @@ if __name__ == "__main__":
     app = QApplication(sys.argv)
 
     # Preprocessing the stylesheet allows the use of variable values
-    stylesheet = prepare_stylesheet("./stylesheet.qss")
+    stylesheet = prepare_stylesheet("./resources/stylesheet.qss")
     app.setStyleSheet(stylesheet)
 
     GUI = Window()
