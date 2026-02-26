@@ -296,7 +296,7 @@ class Window(QMainWindow):
     # Prompt the user for a new file path and start saving work there
     def prompt_for_new_file(self):
         self.manager.close_and_reset()
-        path = QFileDialog.getSaveFileName(self, "Create new design", "./examples", "SADDL Files (*.saddl)")[0]
+        path = QFileDialog.getSaveFileName(self, "Create new design", "./examples", "SADDL Files (*.saddl)", options=QFileDialog.Option.DontUseNativeDialog)[0]
 
         if path:
             self.manager.start_new_file(path)
@@ -306,7 +306,7 @@ class Window(QMainWindow):
 
     # Prompt the user for a path to an existing file and start working on that
     def prompt_for_existing_file(self):
-        path = QFileDialog.getOpenFileName(self, "Open design", "./examples", "SADDL Files (*.saddl)")[0]
+        path = QFileDialog.getOpenFileName(self, "Open design", "./examples", "SADDL Files (*.saddl)", options=QFileDialog.Option.DontUseNativeDialog)[0]
 
         if path:
             self.manager.load_from_file(path)
@@ -318,7 +318,7 @@ class Window(QMainWindow):
     # Force-save a file or save existing work as a file
     def save_file(self):
         if not self.manager.file:
-            path = QFileDialog.getSaveFileName(self, "Save design as...", "./examples", "SADDL Files (*.saddl)")[0]
+            path = QFileDialog.getSaveFileName(self, "Save design as...", "./examples", "SADDL Files (*.saddl)", options=QFileDialog.Option.DontUseNativeDialog)[0]
             if path:
                 self.manager.save_as_file(path)
                 self._display_filename_in_title(path)

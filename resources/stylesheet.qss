@@ -105,3 +105,14 @@ QScrollArea {
 QScrollArea > QWidget > QWidget {
     background: --background_color;
 }
+
+/* Style the new, open, and save file dialogs */
+QFileDialog QTreeView {
+    background-color: --pane_color;
+}
+QFileDialog QListView {
+    background-color: --pane_color;
+}
+QFileDialog QHeaderView, QFileDialog QScrollBar {
+    background-color: --pane_color
+}
