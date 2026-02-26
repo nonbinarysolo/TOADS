@@ -21,7 +21,7 @@ COUPLE FR5 to DP2 because Common padding method
 DEFINE FR2.1 as Transmit >= 40 Nm
 DEFINE DP1.1 as 5 mm thickness
 COUPLE FR2.1 to DP1.1 because Sufficient bending strength
-DEFINE FR3.1 as Fit within 50 mm gap
+DEFINE FR3.1 as Fit within 10 mm gap
 COUPLE FR3.1 to DP1.1 because Sufficient clearance
 DEFINE PV1 as Cut from plate stock
 DEFINE PV1.1 as Make on CNC mill
