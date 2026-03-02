@@ -11,6 +11,8 @@ from ui_core import prepare_stylesheet, load_icons
 from ui_matrix import MatrixScene, NavigableGraphicsView
 from ui_history import TimelineScene
 from plugins_core import TOADSPlugin
+from src.aera_interface import AERA_Interface
+from aera_settings import AERA_Configuration
 
 
 class InteractionManager:
@@ -21,6 +23,7 @@ class InteractionManager:
         self.matrix = None
         self.matrix_scene = None
         self.plugins = []
+        self.agent_interface = None
         self.file = None
 
     # Execute a SADDL statement
@@ -80,6 +83,10 @@ class InteractionManager:
     # Connect to a TOADSPlugin (do this before loading anything in)
     def connect_plugin(self, plugin: TOADSPlugin):
         self.plugins.append(plugin)
+
+    # Allow this object to interact with an AERA agent
+    def connect_agent_interface(self, agent_interface):
+        self.agent_interface = agent_interface
 
     # Start logging changes to a new file
     def start_new_file(self, path):
@@ -222,6 +229,9 @@ class Window(QMainWindow):
         self.timeline_view.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
         self.timeline_view.setParent(self.central)
 
+        # Set up the AERA interface
+        self.aera_interface = AERA_Interface(self.manager)
+
         # If enabled, import and set up plugins as needed
         if plugins:
             from plugins.information import InformationContentCalculator
@@ -238,11 +248,14 @@ class Window(QMainWindow):
         # Connect everything to the manager
         self.manager.connect_matrix(self.matrix_scene.matrix)
         self.manager.connect_history(self.timeline_scene.history)
+        self.manager.connect_agent_interface(self.aera_interface)
 
         # Put the toolbar together
         self._build_file_toolbar()
         self.toolbar.addSeparator()
         self._build_view_toolbar()
+        self.toolbar.addSeparator()
+        self._build_AERA_toolbar()
 
         # Add an option to turn the timeline view off and on
         self.toolbar.addSeparator()
@@ -263,6 +276,15 @@ class Window(QMainWindow):
         # Hide all plugin windows at the start
         for plugin_window in self.manager.plugins:
             plugin_window.setVisible(False)
+
+        # Connect relevant UI elements to the interface
+        self.aera_interface.connect_UI_and_configure(
+            self.AERA_connect_action,
+            self.AERA_disconnect_action,
+            self.AERA_start_action,
+            self.AERA_stop_action,
+            self.AERA_status_label
+        )
 
         # Show the GUI
         status.showMessage("TOADS ready", 5000)
@@ -327,6 +349,39 @@ class Window(QMainWindow):
         zoom_out_action.triggered.connect(self.matrix_view.zoom_out)
         self.toolbar.addAction(zoom_out_action)
 
+    # Put together the toolbar the controls/monitors the AERA Interface
+    def _build_AERA_toolbar(self):
+        self.AERA_connect_action = QAction("Connect to AERA", self)
+        self.AERA_connect_action.setIcon(self.TOADSIcons["AgentConnect"])
+        self.AERA_connect_action.triggered.connect(self.aera_interface.connect_to_AERA)
+        self.toolbar.addAction(self.AERA_connect_action)
+
+        self.AERA_disconnect_action = QAction("Disconnect from AERA", self)
+        self.AERA_disconnect_action.setIcon(self.TOADSIcons["AgentDisconnect"])
+        self.AERA_disconnect_action.triggered.connect(self.aera_interface.disconnect_from_AERA)
+        self.AERA_disconnect_action.setVisible(False)
+        self.toolbar.addAction(self.AERA_disconnect_action)
+
+        self.AERA_start_action = QAction("Start AERA", self)
+        self.AERA_start_action.setIcon(self.TOADSIcons["AgentStart"])
+        self.AERA_start_action.triggered.connect(self.aera_interface.start_AERA)
+        self.AERA_start_action.setEnabled(False)
+        self.toolbar.addAction(self.AERA_start_action)
+
+        self.AERA_stop_action = QAction("Stop AERA", self)
+        self.AERA_stop_action.setIcon(self.TOADSIcons["AgentStop"])
+        self.AERA_stop_action.triggered.connect(self.aera_interface.stop_AERA)
+        self.AERA_stop_action.setVisible(False)
+        self.toolbar.addAction(self.AERA_stop_action)
+
+        configure_AERA_action = QAction("Configure AERA", self)
+        configure_AERA_action.setIcon(self.TOADSIcons["AgentConfigure"])
+        configure_AERA_action.triggered.connect(self.configure_AERA)
+        self.toolbar.addAction(configure_AERA_action)
+
+        self.AERA_status_label = QLabel(self)
+        self.toolbar.addWidget(self.AERA_status_label)
+
     # Take an absolute path to a .saddl file, clean it up, and set the title bar accordingly
     def _display_filename_in_title(self, path_to_file):
         TOADS_root = os.path.split(os.getcwd())[0]
@@ -367,6 +422,15 @@ class Window(QMainWindow):
 
         elif self.manager.save_file():
             self.statusBar().showMessage("File saved successfully", 5000)
+
+    # Pop-up a small window with options for the AERA interface
+    def configure_AERA(self):
+        dialog = AERA_Configuration(self)
+        dialog.exec()
+
+        # Reset the AERA interface if "Apply" or the close button was pressed
+        if dialog.accepted:
+            self.aera_interface.refresh()
 
     # When the window closes, make sure to save the file
     def closeEvent(self, event):
