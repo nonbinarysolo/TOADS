@@ -2,7 +2,7 @@
 /* Variables can be defined to make things easier          */
 
 /* DEFINE --text_color AS #111111 */
-/* DEFINE --text_faint AS #111111 */
+/* DEFINE --text_disabled AS #333333 */
 /* DEFINE --background_color AS #717d8e */
 /* DEFINE --pane_color AS #a1a8b3 */
 /* DEFINE --highlight_color AS #b4b9c2 */
@@ -64,8 +64,11 @@ QPushButton:checked {
     background: green;
 }
 
-QLabel {
+QLabel:enabled {
     color: --text_color;
+}
+QLabel:disabled {
+    color: --text_disabled;
 }
 
 QLineEdit {
@@ -118,4 +121,18 @@ QFileDialog QListView {
 }
 QFileDialog QHeaderView, QFileDialog QScrollBar {
     background-color: --pane_color
+}
+
+/* Style the QGroupBoxes in the AERA settings window TODO: Improve these visuals */
+QGroupBox::indicator:checked {
+    background-color: --highlight_color;
+}
+QGroupBox::indicator:unchecked {
+    background-color: --pane_color;
+}
+QGroupBox::title:enabled {
+    color: --text_color;
+}
+QGroupBox::title:disabled {
+    color: --text_disabled;
 }
