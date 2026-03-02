@@ -97,6 +97,9 @@ QTabBar {
 QTabBar QToolButton {
     background: --pane_color;
 }
+QTabWidget::pane {
+    border: transparent;
+}
 
 /* Style the scroll areas accordingly */
 QScrollArea {

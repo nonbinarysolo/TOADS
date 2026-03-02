@@ -1192,8 +1192,10 @@ class MatrixScene(QGraphicsScene):
 
 # This version QGraphicsView includes panning, zooming, and rotation controls as well as an infinite canvas
 class NavigableGraphicsView(QGraphicsView):
-    def __init__(self, scene):
+    def __init__(self, parent, scene):
         super().__init__(scene)
+
+        self.parent_window = parent
 
         # Turn off scrollbars and set drag mode
         self.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
@@ -1322,3 +1324,8 @@ class NavigableGraphicsView(QGraphicsView):
             event.accept()
         else:
             super().wheelEvent(event)
+
+    # Report resize events to the main window so the history view can be moved accordingly
+    def resizeEvent(self, event):
+        self.parent_window.move_timeline_view(event.size())
+        super().resizeEvent(event)

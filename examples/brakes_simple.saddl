@@ -1,0 +1,14 @@
+# A simple demonstration based on Table 4.2 in Design Engineering and Science by Suh, Cavique, and Foley (2021)
+
+DEFINE FR1 as Brake vehicle
+DEFINE DP1 as Brake system
+COUPLE FR1 to DP1 because Most simple implementation
+DEFINE FR1.1 as Brake power density
+DEFINE DP1.1 as Disk brakes
+COUPLE FR1.1 to DP1.1 because Efficiently dissipate energy
+DEFINE FR1.1.1 as Dissipate heat
+DEFINE DP1.1.1 as Self-cooling disks
+COUPLE FR1.1.1 to DP1.1.1 because Cooling with no extra parts
+DEFINE FR1.1.1.1 as Maintain surface contact
+DEFINE DP1.1.1.1 as Determine roughness
+COUPLE FR1.1.1.1 to DP1.1.1.1 because Aids in control of surface contact

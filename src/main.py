@@ -9,8 +9,6 @@ import saddl
 from ui_core import prepare_stylesheet, load_icons
 from ui_matrix import MatrixScene, NavigableGraphicsView
 from ui_history import TimelineScene
-
-# Import plugins here
 from plugins_core import TOADSPlugin
 
 
@@ -159,9 +157,9 @@ class InteractionManager:
             self.file.write(statement + "\n")
 
 
-# A simple window to house everything
+# A simple window to house everything (plugins can be disabled to keep things simple)
 class Window(QMainWindow):
-    def __init__(self):
+    def __init__(self, plugins=True):
         # Set up the GUI
         super(Window, self).__init__()
         self.setWindowTitle("TOADS")
@@ -191,7 +189,7 @@ class Window(QMainWindow):
 
         # Create the matrix scene and view
         self.matrix_scene = MatrixScene(self, self.manager)
-        self.matrix_view = NavigableGraphicsView(self.matrix_scene)
+        self.matrix_view = NavigableGraphicsView(self, self.matrix_scene)
         self.layout.addWidget(self.matrix_view)
 
         # Create the timeline scene and view
@@ -202,12 +200,18 @@ class Window(QMainWindow):
         self.timeline_view.setParent(self.central)
         # TODO: Ensure this updates so dock widgets don't draw over the timeline
 
-        # Set up plugins as needed
-        # ...
+        # If enabled, import and set up plugins as needed
+        if plugins:
+            from plugins.information import InformationContentCalculator
 
-        # Hide all plugin windows at the start
-        for plugin_window in self.manager.plugins:
-            plugin_window.setVisible(False)
+            # Initialize plugins here so they can be tracked accordingly
+            plugins = [
+                InformationContentCalculator(self, self.manager),
+            ]
+
+            # Link plugins to manager
+            for plugin in plugins:
+                self.manager.connect_plugin(plugin)
 
         # Connect everything to the manager
         self.manager.connect_matrix(self.matrix_scene.matrix)
@@ -218,11 +222,25 @@ class Window(QMainWindow):
         self.toolbar.addSeparator()
         self._build_view_toolbar()
 
+        # Add an option to turn the timeline view off and on
+        self.toolbar.addSeparator()
+        timelineview_action = QAction("Show/hide the timeline view", self)
+        timelineview_action.setShortcut(QKeySequence("Ctrl+H"))
+        timelineview_action.setIcon(self.TOADSIcons["TimelineView"])
+        timelineview_action.setCheckable(True)
+        timelineview_action.setChecked(True)
+        timelineview_action.triggered.connect(self.timeline_view.setVisible)
+        self.toolbar.addAction(timelineview_action)
+
         # Add plugin toolbars if applicable (there's always at least one hide/show action per plugin)
         for plugin in self.manager.plugins:
             self.toolbar.addSeparator()
             for action in plugin.get_toolbar_actions():
                 self.toolbar.addAction(action)
+
+        # Hide all plugin windows at the start
+        for plugin_window in self.manager.plugins:
+            plugin_window.setVisible(False)
 
         # Show the GUI
         status.showMessage("TOADS ready", 5000)
@@ -334,14 +352,18 @@ class Window(QMainWindow):
         super().closeEvent(event)
 
     # When the window is resized, make sure the timeline view stays in the right spot
-    def resizeEvent(self, event):
+    def move_timeline_view(self, matrix_view_size):
         margins = self.layout.contentsMargins()
         width = int(self.timeline_scene.sceneRect().width())
-        x = int(self.central.geometry().width() - width - margins.right())
+        x = max(margins.left(), int(self.central.geometry().width() - width - margins.right()))
         y = margins.top()
         height = self.central.geometry().height() - (margins.top() + margins.bottom())
 
         self.timeline_view.setGeometry(QRect(x, y, width, height))
+
+    # Trigger a timeline update when the window resizes
+    def resizeEvent(self, event):
+        self.move_timeline_view(event.size())
         super().resizeEvent(event)
 
 
@@ -353,5 +375,8 @@ if __name__ == "__main__":
     stylesheet = prepare_stylesheet("./resources/stylesheet.qss")
     app.setStyleSheet(stylesheet)
 
-    GUI = Window()
+    # Disable plugins if --no-plugins is specified
+    plugins_enabled = not "--no-plugins" in sys.argv
+    GUI = Window(plugins_enabled)
+
     sys.exit(app.exec())
