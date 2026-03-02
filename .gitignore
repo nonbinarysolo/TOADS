@@ -5,3 +5,5 @@ src/__pycache__/*
 # Editor Files
 *.bak
 /venv/
+/.ai/
+/.idea/shelf/
