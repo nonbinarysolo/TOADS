@@ -198,7 +198,6 @@ class Window(QMainWindow):
         self.timeline_view.setStyleSheet("background-color: rgba(192, 192, 192, 96); border: 0px")
         self.timeline_view.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
         self.timeline_view.setParent(self.central)
-        # TODO: Ensure this updates so dock widgets don't draw over the timeline
 
         # If enabled, import and set up plugins as needed
         if plugins:
