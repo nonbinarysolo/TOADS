@@ -3,7 +3,7 @@ import sys
 
 from PyQt6.QtCore import QRect, Qt
 from PyQt6.QtGui import QAction, QKeySequence, QIcon
-from PyQt6.QtWidgets import QMainWindow, QApplication, QWidget, QHBoxLayout, QFileDialog, QLabel, QGraphicsView, \
+from PyQt6.QtWidgets import QMainWindow, QApplication, QWidget, QHBoxLayout, QFileDialog, QLabel, QGraphicsView, QFrame, \
     QProgressDialog
 
 import saddl
@@ -204,8 +204,12 @@ class Window(QMainWindow):
         self.toolbar.setMovable(False)
 
         # Set up a status bar with three slots
-        self.current_file = QLabel("Work not being saved")
         status = self.statusBar()
+        self.agent_status = QLabel("AERA not connected")
+        self.agent_status.setFrameShape(QFrame.Shape.Box)
+        self.current_file = QLabel("Work not being saved")
+        self.current_file.setFrameShape(QFrame.Shape.Box)
+        status.addPermanentWidget(self.agent_status, 0)
         status.addPermanentWidget(self.current_file, 0)
 
         # The interaction manager keeps track of changes
@@ -283,7 +287,7 @@ class Window(QMainWindow):
             self.AERA_disconnect_action,
             self.AERA_start_action,
             self.AERA_stop_action,
-            self.AERA_status_label
+            self.agent_status
         )
 
         # Show the GUI
@@ -378,9 +382,6 @@ class Window(QMainWindow):
         configure_AERA_action.setIcon(self.TOADSIcons["AgentConfigure"])
         configure_AERA_action.triggered.connect(self.configure_AERA)
         self.toolbar.addAction(configure_AERA_action)
-
-        self.AERA_status_label = QLabel(self)
-        self.toolbar.addWidget(self.AERA_status_label)
 
     # Take an absolute path to a .saddl file, clean it up, and set the title bar accordingly
     def _display_filename_in_title(self, path_to_file):
