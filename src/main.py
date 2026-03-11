@@ -370,6 +370,10 @@ if __name__ == "__main__":
     os.environ["QT_SCALE_FACTOR"] = '1.25'  # Makes the icons less blurry
     app = QApplication(sys.argv)
 
+    # Set up the application icon
+    app.setApplicationName("TOADS")
+    app.setWindowIcon(QIcon("./resources/Application Icon.png"))
+
     # Preprocessing the stylesheet allows the use of variable values
     stylesheet = prepare_stylesheet("./resources/stylesheet.qss")
     app.setStyleSheet(stylesheet)
