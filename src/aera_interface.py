@@ -1,9 +1,12 @@
 import socket
 
 from PyQt6.QtCore import QSettings, Qt
-from PyQt6.QtWidgets import QApplication
+from PyQt6.QtWidgets import QApplication, QProgressDialog, QMessageBox
 
+# Include the compiled proto file. This might trip up some IDEs, especially with the TCPMessage class but everything
+# should still compile fine so long as this is imported and compiled correctly.
 from tcp_data_message_pb2 import *
+
 
 # Messages start with an 8-byte (uint64) length indication
 MSG_LENGTH_LEN = 8
@@ -94,8 +97,9 @@ class TCPConnection:
 
 
 class AERA_Interface:
-    def __init__(self, manager):
+    def __init__(self, manager, parent_window):
         self.manager = manager                              # All interactions go through the manager
+        self.parent_window = parent_window                  # Used when showing progress dialogs
         self.settings = QSettings("Sierra-ACED", "TOADS")   # Configuration details stored here
 
         # UI elements the interface needs to be able to drive
@@ -196,6 +200,74 @@ class AERA_Interface:
         # TODO: Stop AERA
         self._start_action.setEnabled(True)
         self._stop_action.setEnabled(False)
+
+    # Conduct an interaction with AERA and show a progress dialog if needed
+    def _interact_with_AERA(self, message):
+        if not self.conn:
+            return False
+
+        # Set up a progress dialog in case this takes a while
+        progress = QProgressDialog(self.parent_window)
+        #progress.setMinimumDuration(2000)       # This doesn't do much for the moment since everything's in one thread
+        progress.setWindowTitle("AERA Interface")
+        progress.setModal(True)
+        progress.setMinimum(0)
+        progress.setMaximum(2)
+        progress.show()
+        QApplication.processEvents()
+
+        # Send message to AERA
+        progress.setValue(0)
+        progress.setLabelText("Sending message...")
+        QApplication.processEvents()
+        self.conn.send(message)
+
+        # Await response
+        progress.setValue(1)
+        progress.setLabelText("Awaiting response...")
+        QApplication.processEvents()
+        response = self.conn.receive()
+
+        # Close the dialog and pass the response alog
+        progress.setValue(2)
+        progress.setLabelText("Response received")
+        QApplication.processEvents()
+
+        # If no response was received, consider the connection closed
+        if not response:
+            self.disconnect_from_AERA()
+            dialog = QMessageBox(self.parent_window)
+            dialog.setWindowTitle("Warning!")
+            dialog.setText("Lost connection with AERA, recommend reinitializing")
+            # TODO: Provide a button to start the reinitialization process
+            dialog.exec()
+
+        return response
+
+    # Send a design statement to AERA and make sure the message got through
+    def send_change_to_AERA(self, new_statement):
+        # TODO: Pack up the statement
+        message = TCPMessage()
+
+        # Send it off to AERA and see what happens
+        response = self._interact_with_AERA(message)
+
+        # Success is judged by whether a confirmation message came back or not
+        return response is not None
+
+    # Inject a goal to AERA and see what change it would make to the design
+    def request_change_from_AERA(self):
+        # TODO: Pack up a goal
+        message = TCPMessage()
+
+        # Send it off to AERA and see what happens
+        response = self._interact_with_AERA(message)
+
+        # Unpack the response
+        if response:
+            pass # TODO: Unpack into a statement
+        else:
+            return None
 
 """
 Request change flow

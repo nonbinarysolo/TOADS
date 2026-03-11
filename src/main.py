@@ -23,7 +23,7 @@ class InteractionManager:
         self.matrix = None
         self.matrix_scene = None
         self.plugins = []
-        self.agent_interface = None
+        self.AERA_interface = None
         self.file = None
 
     # Execute a SADDL statement
@@ -85,8 +85,8 @@ class InteractionManager:
         self.plugins.append(plugin)
 
     # Allow this object to interact with an AERA agent
-    def connect_agent_interface(self, agent_interface):
-        self.agent_interface = agent_interface
+    def connect_AERA_interface(self, AERA_interface):
+        self.AERA_interface = AERA_interface
 
     # Start logging changes to a new file
     def start_new_file(self, path):
@@ -183,6 +183,10 @@ class InteractionManager:
         for plugin in self.plugins:
             plugin.update_design_state(statement)
 
+        # If configured, send the design change to AERA
+        if self.AERA_interface:
+            self.AERA_interface.send_change_to_AERA(statement)
+
         if save and self.file:
             self.file.write(statement + "\n")
 
@@ -234,7 +238,7 @@ class Window(QMainWindow):
         self.timeline_view.setParent(self.central)
 
         # Set up the AERA interface
-        self.aera_interface = AERA_Interface(self.manager)
+        self.aera_interface = AERA_Interface(self.manager, self)
 
         # If enabled, import and set up plugins as needed
         if plugins:
@@ -252,7 +256,7 @@ class Window(QMainWindow):
         # Connect everything to the manager
         self.manager.connect_matrix(self.matrix_scene.matrix)
         self.manager.connect_history(self.timeline_scene.history)
-        self.manager.connect_agent_interface(self.aera_interface)
+        self.manager.connect_AERA_interface(self.aera_interface)
 
         # Put the toolbar together
         self._build_file_toolbar()
