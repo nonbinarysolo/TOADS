@@ -2,7 +2,7 @@ import os.path
 import sys
 
 from PyQt6.QtCore import QRect, Qt
-from PyQt6.QtGui import QAction, QKeySequence
+from PyQt6.QtGui import QAction, QKeySequence, QIcon
 from PyQt6.QtWidgets import QMainWindow, QApplication, QWidget, QHBoxLayout, QFileDialog, QLabel, QGraphicsView
 
 import saddl
