@@ -156,3 +156,12 @@ class TimelineScene(QGraphicsScene):
         # self.addEllipse(QRectF(-radius, -radius, radius*2, radius*2))
         # self.addLine(0, 0, radius, 0)
         # self.addLine(0, 0, 0, radius)
+
+    # Delete the timeline and start a new one
+    def reset_history(self):
+        self.clear()
+        self.setSceneRect(QRectF())
+
+        self.history = DesignHistory(self)
+        self.addItem(self.history)
+        return self.history

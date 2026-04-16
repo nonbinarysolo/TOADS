@@ -1081,17 +1081,6 @@ class MultiMatrix(QGraphicsItem):
         self._check_all_supports()
         return True
 
-    # Reset the matrix to load in a new design. Bypasses the usual functions and just drops all references
-    def reset(self):
-        for cp in self.couplings:
-            self.parent_scene.removeItem(cp)
-        self.couplings.clear()
-
-        for element_type in ["CN", "FR", "DP", "PV"]:
-            for el in self.elements[element_type]:
-                self.parent_scene.removeItem(el)
-            self.elements[element_type].clear()
-
 
 # This is the main QGraphicsScene that renders and handles events for the central UI
 class MatrixScene(QGraphicsScene):
@@ -1113,6 +1102,15 @@ class MatrixScene(QGraphicsScene):
 
     # Return the matrix so it can be modified by something like an InteractionManager
     def get_matrix(self):
+        return self.matrix
+
+    # Delete the matrix and start a new one
+    def reset_matrix(self):
+        self.clear()
+        self.setSceneRect(QRectF())
+
+        self.matrix = MultiMatrix(self)
+        self.addItem(self.matrix)
         return self.matrix
 
     # Close a coupling popup

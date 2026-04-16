@@ -17,7 +17,9 @@ class InteractionManager:
     def __init__(self, parent):
         self.parent = parent
         self.history = None
+        self.history_scene = None
         self.matrix = None
+        self.matrix_scene = None
         self.plugins = []
         self.file = None
 
@@ -68,10 +70,12 @@ class InteractionManager:
     # Allow this object to control a design matrix
     def connect_matrix(self, matrix):
         self.matrix = matrix
+        self.matrix_scene = matrix.parent_scene
 
     # Allow this object to control a design history
     def connect_history(self, history):
         self.history = history
+        self.history_scene = history.parent_scene
 
     # Connect to a TOADSPlugin (do this before loading anything in)
     def connect_plugin(self, plugin: TOADSPlugin):
@@ -152,8 +156,8 @@ class InteractionManager:
     def close_and_reset(self):
         if self.file:
             self.file.close()
-        self.matrix.reset()
-        self.history.reset()
+        self.matrix = self.matrix_scene.reset_matrix()
+        self.history = self.history_scene.reset_history()
 
     # Take a SADDL statement with reasoning and apply the change to the system. This is used by the external
     # plugins and the new element widgets since those all implement their own review process and can skip
