@@ -3,7 +3,8 @@ import sys
 
 from PyQt6.QtCore import QRect, Qt
 from PyQt6.QtGui import QAction, QKeySequence, QIcon
-from PyQt6.QtWidgets import QMainWindow, QApplication, QWidget, QHBoxLayout, QFileDialog, QLabel, QGraphicsView
+from PyQt6.QtWidgets import QMainWindow, QApplication, QWidget, QHBoxLayout, QFileDialog, QLabel, QGraphicsView, \
+    QProgressDialog
 
 import saddl
 from ui_core import prepare_stylesheet, load_icons
@@ -95,15 +96,33 @@ class InteractionManager:
         # Read the file and modify the matrix/history accordingly
         self.file = open(path, "r+", buffering=1)  # Set to line buffering so changes are written instantly
         contents = self.file.read()
+
+        # Pull out the SADDL statements
+        statements = []
         for statement in contents.split("\n"):
             if statement == "" or statement.startswith("#"):  # Ignore blank lines and comments
                 continue
+            else:
+                statements.append(statement)
 
+        # Process each statement and show a progress dialog
+        progress = QProgressDialog("Reading SADDL statements...", "Cancel", 0, len(statements), self.parent)
+        progress.setModal(True)
+        progress.setMinimumDuration(1)
+        for n, statement in enumerate(statements):
             if not self._execute_statement(statement):
                 print("Error loading file! Could not execute:", statement)
                 return False
             else:
                 self.commit_change(statement, save=False)
+
+            # Update the progress dialog
+            progress.setValue(n)
+            if progress.wasCanceled():
+                return False
+
+        # Close the dialog
+        progress.setValue(progress.maximum())
 
         # If the file doesn't end in a newline, add one
         if not contents.endswith("\n"):
