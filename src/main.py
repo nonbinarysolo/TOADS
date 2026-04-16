@@ -158,6 +158,8 @@ class InteractionManager:
             self.file.close()
         self.matrix = self.matrix_scene.reset_matrix()
         self.history = self.history_scene.reset_history()
+        for plugin in self.plugins:
+            plugin.reset()
 
     # Take a SADDL statement with reasoning and apply the change to the system. This is used by the external
     # plugins and the new element widgets since those all implement their own review process and can skip

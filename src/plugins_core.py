@@ -35,3 +35,7 @@ class TOADSPlugin(QDockWidget):
     # Override this: If this plugin adds anything to the toolbar, put that together here
     def get_toolbar_actions(self):
         return []
+
+    # Override this: When a new file is loaded in, this should reset the plugin's state
+    def reset(self):
+        return False
