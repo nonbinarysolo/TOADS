@@ -83,8 +83,7 @@ class InteractionManager:
 
     # Start logging changes to a new file
     def start_new_file(self, path):
-        self.matrix.reset()
-        self.history.reset()
+        self.close_and_reset()
         self.file = open(path, "a+", buffering=1)   #  Set to line buffering so changes are written instantly
 
     # Load a .saddl file
@@ -93,9 +92,8 @@ class InteractionManager:
         if not os.path.exists(path):  # Make sure this file exists
             return False
 
-        # If a file is currently open, save everything before resetting
-        if self.file:
-            self.close_and_reset()
+        # Save everything and reset
+        self.close_and_reset()
 
         # Read the file and modify the matrix/history accordingly
         self.file = open(path, "r+", buffering=1)  # Set to line buffering so changes are written instantly
