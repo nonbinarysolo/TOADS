@@ -19,10 +19,11 @@ def statement_to_action_reasoning(statement):
     assert (validate_statement(statement))
     terms = statement.split(" ")
 
-    # Figure out if there's a conjunction in the statement
+    # Figure out if there's a conjunction in the statement. Ignore repeated instances of a conjunction so
+    # we can use 'as', etc. in reasoning statements (ex. "risk should be as low as possible")
     conjunction_idx = 0
     for term in terms:
-        if term in causal_conjunctions:
+        if term in causal_conjunctions and conjunction_idx == 0:
             conjunction_idx = terms.index(term)
 
     # If a conjunction was present, split around that. If not, no reasoning was provided so just return the statement
