@@ -8,6 +8,10 @@ This file provides some parsing and validation functions for the language.
 prepositions = ["to", "from"]
 causal_conjunctions = ["because", "as"]
 
+# This token is only used to indicate the end of a statement when transmitting to/from AERA
+# Don't use it anywhere else!
+END_OF_STATEMENT = "~~~"
+
 
 # TODO: Validate statement
 def validate_statement(statement):
@@ -51,3 +55,34 @@ def statement_to_key_terms(statement):
         raise (Exception("Failed to parse SADDL statement: " + statement))
 
     return verb, obj, ind_obj, reasoning
+
+# Tokenize a statement for transmission. Here's an example of a tokenized statement:
+# ["COUPLE", "FR", "1", ".", "1", "to", "DP", "1", ".", "1", "because", "brakes", "slow", "vehicle", ";"]
+# TODO: Generalize this to effect statements
+def tokenize(statement):
+    tokens = []
+
+    # Break up the statement into key terms
+    verb, obj, ind_obj, reasoning = statement_to_key_terms(statement)
+
+    # Verbs are whole tokens
+    tokens += [verb]
+
+    # Break objects up into the type of element and the characters of the full degree
+    tokens += [obj[:2]]             # Element type (ex. "FR")
+    tokens += obj[2:].split()       # Everything else (ex. "1", ".", "2", ".", "3")
+
+    # TODO: Add in conjunctions?
+
+    # If there's an indirect object, add that as well
+    if ind_obj:
+        tokens += [obj[:2]]         # Element type (ex. "FR")
+        tokens += obj[2:].split()   # Everything else (ex. "1", ".", "2", ".", "3")
+
+    # Reasoning goes in word by word
+    tokens += reasoning.split(" ")
+
+    # Add in an end of statement token
+    tokens += [END_OF_STATEMENT]
+
+    return tokens

@@ -185,7 +185,7 @@ class InteractionManager:
 
         # If configured, send the design change to AERA
         if self.AERA_interface:
-            self.AERA_interface.send_change_to_AERA(statement)
+            self.AERA_interface.send_change_to_AERA(statement, "")
 
         if save and self.file:
             self.file.write(statement + "\n")

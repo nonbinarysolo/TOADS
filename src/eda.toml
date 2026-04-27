@@ -1,0 +1,43 @@
+title = "EDA"
+
+
+[[entities]]
+name = "human"
+properties = ["action"]
+commands = []
+
+[[entities]]
+name = "aera"
+properties = []
+commands = ["act"]
+
+[[entities]]
+name = "design"
+properties = [ "readback", "effect" ]
+commands = []
+
+
+[[properties]]
+name = "action"
+type = "string"
+dimensionality = [1]
+opcode_handle = ""
+
+[[properties]]
+name = "readback"
+type = "string"
+dimensionality = [1]
+opcode_handle = ""
+
+[[properties]]
+name = "effect"
+type = "string"
+dimensionality = [1]
+opcode_handle = ""
+
+
+[[commands]]
+name = "act"
+type = "string"
+dimensionality = [1]
+opcode_handle = ""
