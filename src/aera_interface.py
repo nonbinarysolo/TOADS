@@ -24,7 +24,9 @@ class TCPConnection:
         self.timeout = timeout
 
         # Start up the server and connection object
-        self.server = socket.create_server((IP, port), reuse_port=True)
+        self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        self.server.bind((IP, port))
         self.server.settimeout(timeout)
         self.server.listen(1)
         self.conn = None
@@ -445,11 +447,11 @@ class World:
 
 
 class AERA_Interface:
-    def __init__(self, manager, parent_window):
+    def __init__(self, manager, parent_window, toml_path="./src/eda.toml"):
         self.manager = manager                              # All interactions go through the manager
         self.parent_window = parent_window                  # Used when showing progress dialogs
         self.settings = QSettings("Sierra-ACED", "TOADS")   # Configuration details stored here
-        self.world = World("./src/eda.toml")                # Configure the 'world' the AERA will see
+        self.world = World(toml_path)                       # Configure the 'world' the AERA will see
         self.AERA_time = 0                                  # The interface's guess at AERA's current time
 
         # UI elements the interface needs to be able to drive
