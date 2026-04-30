@@ -7,3 +7,4 @@ src/__pycache__/*
 /venv/
 /.ai/
 /.idea/shelf/
+/.idea/workspace.xml
