@@ -24,7 +24,9 @@ class TCPConnection:
         self.timeout = timeout
 
         # Start up the server and connection object
-        self.server = socket.create_server((IP, port), reuse_port=True)
+        self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        self.server.bind((IP, port))
         self.server.settimeout(timeout)
         self.server.listen(1)
         self.conn = None
