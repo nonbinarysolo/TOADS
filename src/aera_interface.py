@@ -649,7 +649,7 @@ class AERA_Interface:
             self.world.topics_to_pInstances["design_readback"].set_value("")
             self.world.topics_to_pInstances["design_effect"].set_value("")
             self._send_data_message()
-            time.sleep(0.02)     # This seems to help ensure AERA catches everything
+            time.sleep(0.2)     # This seems to help ensure AERA catches everything
 
         # Broadcast TOADS' "readback" of the message (this is for AERA's benefit, we know it's already been received)
         for token in tokens:
@@ -657,7 +657,7 @@ class AERA_Interface:
             self.world.topics_to_pInstances["design_readback"].set_value(token)
             self.world.topics_to_pInstances["design_effect"].set_value("")
             self._send_data_message()
-            time.sleep(0.02)     # This seems to help ensure AERA catches everything
+            time.sleep(0.2)     # This seems to help ensure AERA catches everything
 
         # TODO: Tokenize and broadcast the effect
 
